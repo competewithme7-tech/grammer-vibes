@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GrammarVibe | Master English Grammar</title>
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #a1c4fd 100%);
+      --card-bg: rgba(255, 255, 255, 0.9);
+      --primary: #6c5ce7;
+      --secondary: #ff7675;
+      --accent-yellow: #ffeaa7;
+      --accent-green: #55efc4;
+      --accent-blue: #74b9ff;
+      --text: #2d3436;
+      --shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      color: var(--text);
+      padding-bottom: 3rem;
+    }
+
+    header {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(10px);
+      padding: 1.5rem 2rem;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(45deg, #d63031, #6c5ce7, #00b894);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: #636e72;
+      margin-top: 0.2rem;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    /* Category Filter Tabs */
+    .filter-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 0.8rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      border: none;
+      padding: 0.6rem 1.4rem;
+      border-radius: 30px;
+      font-weight: 700;
+      cursor: pointer;
+      background: #1279ce;
+      color: var(--text);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+    }
+
+    .tab-btn.active, .tab-btn:hover {
+      background: var(--primary);
+      color: #db24b4;
+      transform: translateY(-2px);
+    }
+
+    /* Grid Layout */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* Grammar Topic Cards */
+    .card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border-top: 6px solid var(--primary);
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .card.nouns { border-color: var(--secondary); }
+    .card.verbs { border-color: var(--primary); }
+    .card.adjectives { border-color: #fdcb6e; }
+    .card.tenses { border-color: var(--accent-green); }
+
+    .card-badge {
+      align-self: flex-start;
+      padding: 0.3rem 0.8rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #fff;
+      margin-bottom: 0.8rem;
+    }
+
+    .badge-nouns { background: var(--secondary); }
+    .badge-verbs { background: var(--primary); }
+    .badge-adjectives { background: #fdcb6e; color: #2d3436; }
+    .badge-tenses { background: var(--accent-green); color: #2d3436; }
+
+    .card-title {
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-desc {
+      font-size: 0.95rem;
+      color: #636e72;
+      margin-bottom: 1.2rem;
+      flex-grow: 1;
+    }
+
+    .card-example {
+      background: #f1f2f6;
+      border-left: 4px solid var(--primary);
+      padding: 0.8rem;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .btn-quiz {
+      border: none;
+      padding: 0.7rem 1rem;
+      border-radius: 12px;
+      font-weight: 700;
+      background: linear-gradient(45deg, var(--primary), #a29bfe);
+      color: #fff;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+    }
+
+    .btn-quiz:hover {
+      opacity: 0.9;
+    }
+
+    /* Interactive Quiz Drawer Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      padding: 1rem;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .quiz-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      position: relative;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1.2rem;
+      font-size: 1.5rem;
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: #b2bec3;
+    }
+
+    .quiz-option {
+      display: block;
+      width: 100%;
+      padding: 0.8rem 1rem;
+      margin: 0.6rem 0;
+      border: 2px solid #dfe6e9;
+      border-radius: 12px;
+      background: #fff;
+      text-align: left;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .quiz-option:hover {
+      border-color: var(--primary);
+      background: #f8f9fa;
+    }
+
+    .quiz-option.correct {
+      background: var(--accent-green);
+      border-color: #00b894;
+      color: #fff;
+    }
+
+    .quiz-option.wrong {
+      background: var(--secondary);
+      border-color: #d63031;
+      color: #fff;
+    }
+
+    .feedback {
+      margin-top: 1rem;
+      font-weight: 700;
+      text-align: center;
+      min-height: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">GrammarVibe</div>
+    <div class="subtitle">Fun, colorful, and interactive English practice</div>
+  </header>
+
+  <div class="container">
+    <!-- Filter Category Tabs -->
+    <div class="filter-tabs">
+      <button class="tab-btn active" onclick="filterCards('all')">All Topics</button>
+      <button class="tab-btn" onclick="filterCards('nouns')">Nouns</button>
+      <button class="tab-btn" onclick="filterCards('verbs')">Verbs</button>
+      <button class="tab-btn" onclick="filterCards('adjectives')">Adjectives</button>
+      <button class="tab-btn" onclick="filterCards('tenses')">Tenses</button>
+    </div>
+
+    <!-- Cards Grid Container -->
+    <div class="grid" id="card-grid"></div>
+  </div>
+
+  <!-- Interactive Quiz Modal -->
+  <div class="modal-overlay" id="quiz-modal">
+    <div class="quiz-card">
+      <button class="close-btn" onclick="closeQuiz()">&times;</button>
+      <h3 id="quiz-title" style="margin-bottom: 1rem;">Quick Practice</h3>
+      <p id="quiz-question" style="font-size: 1.1rem; margin-bottom: 1rem;"></p>
+      <div id="quiz-options"></div>
+      <div class="feedback" id="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <script>
+    const topics = [
+      {
+        id: 1,
+        category: "nouns",
+        title: "Collective Nouns",
+        desc: "Words used to represent a group of people, animals, or things.",
+        example: "A <strong>flock</strong> of birds flew over a <strong>pride</strong> of lions.",
+        question: "Choose the correct collective noun: A _____ of wolves.",
+        options: ["Herd", "Pack", "Flock", "Swarm"],
+        answer: 1
+      },
+      {
+        id: 2,
+        category: "verbs",
+        title: "Action Verbs",
+        desc: "Words that express physical or mental actions executed by a subject.",
+        example: "She <strong>runs</strong> every morning and <strong>thinks</strong> deeply.",
+        question: "Which word is an action verb? 'The dog slept peacefully.'",
+        options: ["Dog", "Slept", "Peacefully", "The"],
+        answer: 1
+      },
+      {
+        id: 3,
+        category: "adjectives",
+        title: "Comparative Adjectives",
+        desc: "Used to compare differences between the two objects they modify.",
+        example: "A cheetah is <strong>faster</strong> than a horse.",
+        question: "Select the correct form: 'This puzzle is _____ than the last one.'",
+        options: ["more easier", "easier", "easiest", "easy"],
+        answer: 1
+      },
+      {
+        id: 4,
+        category: "tenses",
+        title: "Present Perfect Tense",
+        desc: "Used for actions that happened at an unspecified time before now.",
+        example: "I <strong>have visited</strong> Paris twice in my life.",
+        question: "Complete the sentence: 'They _____ finished their homework.'",
+        options: ["has", "have", "are", "were"],
+        answer: 1
+      }
+    ];
+
+    const grid = document.getElementById('card-grid');
+    const modal = document.getElementById('quiz-modal');
+    const quizTitle = document.getElementById('quiz-title');
+    const quizQuestion = document.getElementById('quiz-question');
+    const quizOptions = document.getElementById('quiz-options');
+    const quizFeedback = document.getElementById('quiz-feedback');
+
+    function renderCards(filter = 'all') {
+      grid.innerHTML = '';
+      const filtered = filter === 'all' ? topics : topics.filter(t => t.category === filter);
+
+      filtered.forEach(item => {
+        const card = document.createElement('div');
+        card.className = `card ${item.category}`;
+        card.innerHTML = `
+          <span class="card-badge badge-${item.category}">${item.category}</span>
+          <h3 class="card-title">${item.title}</h3>
+          <p class="card-desc">${item.desc}</p>
+          <div class="card-example">${item.example}</div>
+          <button class="btn-quiz" onclick="openQuiz(${item.id})">Take Quick Practice</button>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function filterCards(category) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      renderCards(category);
+    }
+
+    function openQuiz(id) {
+      const item = topics.find(t => t.id === id);
+      quizTitle.innerText = item.title + " Practice";
+      quizQuestion.innerText = item.question;
+      quizFeedback.innerText = "";
+      quizOptions.innerHTML = "";
+
+      item.options.forEach((opt, index) => {
+        const btn = document.createElement('button');
+        btn.className = "quiz-option";
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(btn, index, item.answer);
+        quizOptions.appendChild(btn);
+      });
+
+      modal.classList.add('open');
+    }
+
+    function checkAnswer(selectedBtn, selectedIndex, correctIndex) {
+      const buttons = quizOptions.querySelectorAll('.quiz-option');
+      buttons.forEach(btn => btn.disabled = true);
+
+      if (selectedIndex === correctIndex) {
+        selectedBtn.classList.add('correct');
+        quizFeedback.style.color = "#00b894";
+        quizFeedback.innerText = "✨ Awesome! That's Correct!";
+      } else {
+        selectedBtn.classList.add('wrong');
+        buttons[correctIndex].classList.add('correct');
+        quizFeedback.style.color = "#d63031";
+        quizFeedback.innerText = "❌ Oops! Try reviewing the topic above.";
+      }
+    }
+
+    function closeQuiz() {
+      modal.classList.remove('open');
+    }
+
+    // Initial load
+    renderCards();
+  </script>
+</body>
+</html>
